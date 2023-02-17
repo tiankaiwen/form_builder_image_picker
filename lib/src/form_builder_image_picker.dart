@@ -83,7 +83,7 @@ class FormBuilderImagePicker extends FormBuilderField<List<dynamic>> {
   /// also see [showDecoration],[previewAutoSizeWidth]
   final int? maxImages;
 
-  final Widget Function(BuildContext context, Widget displayImage)?
+  final Widget Function(BuildContext context, Widget displayImage, int index)?
       transformImageWidget;
 
   final Widget cameraIcon;
@@ -284,7 +284,7 @@ class FormBuilderImagePicker extends FormBuilderField<List<dynamic>> {
               return Stack(
                 key: ObjectKey(item),
                 children: <Widget>[
-                  transformImageWidget?.call(context, displayWidget) ??
+                  transformImageWidget?.call(context, displayWidget, index) ??
                       displayWidget,
                   if (state.enabled)
                     PositionedDirectional(
