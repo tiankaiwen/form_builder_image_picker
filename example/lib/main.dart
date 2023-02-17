@@ -116,7 +116,8 @@ class MyHomePage extends StatelessWidget {
                     decoration: const InputDecoration(
                       labelText: 'Pick Photos',
                     ),
-                    transformImageWidget: (context, displayImage) => Card(
+                    transformImageWidget: (context, displayImage, index) =>
+                        Card(
                       shape: const CircleBorder(),
                       clipBehavior: Clip.antiAlias,
                       child: SizedBox.expand(
