@@ -17,7 +17,7 @@ import 'image_source_sheet.dart';
 ///
 /// if you want to use a different object (e.g. a class from the backend that has imageId and imageUrl)
 /// you need to implement [displayCustomType]
-class FormBuilderImagePicker extends FormBuilderField<List<dynamic>> {
+class FormBuilderImagePicker extends FormBuilderFieldDecoration<List<dynamic>> {
   /// set to true to insert an [InputDecorator] which displays labels, borders, etc...
   ///
   /// when [maxImages] == 1, it's better to set this to false
@@ -112,21 +112,22 @@ class FormBuilderImagePicker extends FormBuilderField<List<dynamic>> {
           FutureVoidCallBack cameraPicker, FutureVoidCallBack galleryPicker)?
       optionsBuilder;
 
+  final WidgetBuilder? loadingWidget;
+
   FormBuilderImagePicker({
-    Key? key,
-    //From Super
-    required String name,
-    FormFieldValidator<List<dynamic>>? validator,
-    List<dynamic>? initialValue,
-    InputDecoration decoration = const InputDecoration(),
-    ValueChanged<List<dynamic>?>? onChanged,
-    ValueTransformer<List<dynamic>?>? valueTransformer,
-    bool enabled = true,
-    FormFieldSetter<List<dynamic>>? onSaved,
-    AutovalidateMode autovalidateMode = AutovalidateMode.disabled,
-    VoidCallback? onReset,
-    FocusNode? focusNode,
-    WidgetBuilder? loadingWidget,
+    super.key,
+    required super.name,
+    super.validator,
+    super.initialValue,
+    super.decoration = const InputDecoration(),
+    super.onChanged,
+    super.valueTransformer,
+    super.enabled = true,
+    super.onSaved,
+    super.autovalidateMode = AutovalidateMode.disabled,
+    super.onReset,
+    super.focusNode,
+    this.loadingWidget,
     this.transformImageWidget,
     this.showDecoration = true,
     this.placeholderWidget,
@@ -160,18 +161,6 @@ class FormBuilderImagePicker extends FormBuilderField<List<dynamic>> {
     ],
   })  : assert(maxImages == null || maxImages >= 0),
         super(
-          key: key,
-          initialValue: initialValue,
-          name: name,
-          validator: validator,
-          valueTransformer: valueTransformer,
-          onChanged: onChanged,
-          autovalidateMode: autovalidateMode,
-          onSaved: onSaved,
-          enabled: enabled,
-          onReset: onReset,
-          decoration: decoration,
-          focusNode: focusNode,
           builder: (FormFieldState<List<dynamic>?> field) {
             final state = field as FormBuilderImagePickerState;
             final theme = Theme.of(state.context);
@@ -227,7 +216,7 @@ class FormBuilderImagePicker extends FormBuilderField<List<dynamic>> {
                       optionsBuilder: optionsBuilder,
                       availableImageSources: availableImageSources,
                       onImageSelected: (image) {
-                        state.requestFocus();
+                        state.focus();
                         field.didChange([...value, ...image]);
                         Navigator.pop(state.context);
                       },
@@ -292,7 +281,7 @@ class FormBuilderImagePicker extends FormBuilderField<List<dynamic>> {
                       end: 0,
                       child: InkWell(
                         onTap: () {
-                          state.requestFocus();
+                          state.focus();
                           field.didChange(
                             value.toList()..removeAt(index),
                           );
@@ -342,9 +331,8 @@ class FormBuilderImagePicker extends FormBuilderField<List<dynamic>> {
                                   if (index < value.length) {
                                     final item = value[index];
                                     return itemBuilder(context, item, index);
-                                  } else {
-                                    return addButtonBuilder(context);
                                   }
+                                  return addButtonBuilder(context);
                                 },
                               ),
                             );
@@ -364,8 +352,8 @@ class FormBuilderImagePicker extends FormBuilderField<List<dynamic>> {
   FormBuilderImagePickerState createState() => FormBuilderImagePickerState();
 }
 
-class FormBuilderImagePickerState
-    extends FormBuilderFieldState<FormBuilderImagePicker, List<dynamic>> {
+class FormBuilderImagePickerState extends FormBuilderFieldDecorationState<
+    FormBuilderImagePicker, List<dynamic>> {
   List<dynamic> get effectiveValue =>
       value?.where((element) => element != null).toList() ?? [];
 
@@ -377,11 +365,11 @@ class FormBuilderImagePickerState
 
 class XFileImage extends StatefulWidget {
   const XFileImage({
-    Key? key,
+    super.key,
     required this.file,
     this.fit,
     this.loadingWidget,
-  }) : super(key: key);
+  });
   final XFile file;
   final BoxFit? fit;
   final WidgetBuilder? loadingWidget;
